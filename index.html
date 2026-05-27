@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Ink & Page | Read. Write. Imagine.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fbf7f0;
+            color: #2d2a24;
+            overflow-x: hidden;
+        }
+
+        /* warm paper texture overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(#e9e2d4 1px, transparent 1px);
+            background-size: 24px 24px;
+            pointer-events: none;
+            opacity: 0.4;
+            z-index: -1;
+        }
+
+        /* custom smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* navbar - glassmorphism with warmth */
+        .navbar {
+            width: 100%;
+            background: rgba(251, 247, 240, 0.92);
+            backdrop-filter: blur(16px);
+            padding: 0.9rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02), 0 1px 0 rgba(0, 0, 0, 0.05);
+            transition: all 0.2s;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c47a3e, #9b5e2c);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+            cursor: pointer;
+        }
+
+        .menu ul {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .menu ul li a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #3a352c;
+            transition: 0.2s;
+            font-size: 1rem;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
+        }
+
+        .menu ul li a:hover {
+            color: #bc6f2c;
+            border-bottom-color: #e0b082;
+        }
+
+        .search {
+            display: flex;
+            gap: 0.6rem;
+            background: white;
+            padding: 0.3rem 0.3rem 0.3rem 1rem;
+            border-radius: 60px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+            border: 1px solid #efe4d5;
+        }
+
+        .srch {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 0.9rem;
+            width: 180px;
+            font-weight: 400;
+        }
+
+        .btn {
+            background: #d98e46;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .btn:hover {
+            background: #bc6f2c;
+            transform: scale(0.96);
+        }
+
+        /* main container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 5% 4rem;
+        }
+
+        /* hero + login row */
+        .hero-login-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+            margin: 2rem 0 3rem;
+            align-items: center;
+        }
+
+        .hero {
+            flex: 1.4;
+            min-width: 280px;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.4rem;
+            line-height: 1.2;
+            font-weight: 700;
+            color: #2c241a;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(120deg, #c47a3e, #e4a269);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            line-height: 1.5;
+            margin: 1.2rem 0 1.8rem;
+            color: #4e4538;
+            max-width: 550px;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: #2c241a;
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary:hover {
+            background: #c47a3e;
+            transform: translateY(-3px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid #dbb88c;
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #5b4b34;
+        }
+
+        .btn-outline:hover {
+            background: #fff2e6;
+            border-color: #c47a3e;
+        }
+
+        /* login card modern */
+        .form-card {
+            flex: 0.9;
+            background: #ffffffea;
+            backdrop-filter: blur(2px);
+            padding: 2rem 2rem 2.2rem;
+            border-radius: 2rem;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.15);
+            border: 1px solid #f2e4d6;
+            transition: 0.2s;
+        }
+
+        .form-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.9rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #3e3325;
+        }
+
+        .form-card input {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            margin-bottom: 1rem;
+            border-radius: 48px;
+            border: 1px solid #e3d4c4;
+            background: #fefaf5;
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+
+        .form-card input:focus {
+            outline: none;
+            border-color: #d98e46;
+            box-shadow: 0 0 0 3px rgba(217, 142, 70, 0.2);
+        }
+
+        .btnn {
+            width: 100%;
+            background: #d98e46;
+            border: none;
+            padding: 0.9rem;
+            border-radius: 48px;
+            font-weight: 700;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .link {
+            text-align: center;
+            margin: 1.2rem 0 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .link a {
+            color: #c0793c;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .liw {
+            text-align: center;
+            color: #9b8b78;
+            font-size: 0.8rem;
+            margin: 1rem 0 0.7rem;
+        }
+
+        .icons {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .icons a {
+            color: #a18463;
+            transition: 0.2s;
+        }
+
+        .icons a:hover {
+            color: #d98e46;
+            transform: translateY(-2px);
+        }
+
+        /* section titles */
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin: 3rem 0 1.8rem;
+            text-align: center;
+            color: #2f2a23;
+            letter-spacing: -0.3px;
+        }
+
+        .section-sub {
+            text-align: center;
+            color: #7b6e5c;
+            margin-top: -1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* book cards grid */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.02);
+            border: 1px solid #f0e5da;
+            cursor: pointer;
+        }
+
+        .book-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 30px -12px rgba(99, 62, 27, 0.15);
+            border-color: #e6cfb6;
+        }
+
+        .book-emoji {
+            font-size: 3rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .book-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .book-author {
+            font-size: 0.85rem;
+            color: #9b856b;
+            margin-bottom: 0.6rem;
+        }
+
+        .book-desc {
+            font-size: 0.85rem;
+            color: #5d5343;
+            margin: 0.6rem 0;
+            line-height: 1.4;
+        }
+
+        .badge {
+            background: #f7efe5;
+            display: inline-block;
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #b5682a;
+        }
+
+        /* writing prompt / creative zone */
+        .creative-zone {
+            background: #fffaf3;
+            border-radius: 2rem;
+            padding: 2rem;
+            margin: 2.5rem 0 2rem;
+            border: 1px solid #f1e2d2;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .writing-prompt {
+            flex: 1;
+        }
+
+        .writing-prompt h3 {
+            font-size: 1.7rem;
+            font-weight: 600;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .quote {
+            font-style: italic;
+            color: #b2763b;
+            font-size: 1.1rem;
+            border-left: 4px solid #e0b282;
+            padding-left: 1rem;
+            margin: 1rem 0;
+        }
+
+        .write-btn {
+            background: #e9dbc9;
+            border: none;
+            padding: 0.7rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .write-btn:hover {
+            background: #d98e46;
+            color: white;
+        }
+
+        .showcase-text {
+            flex: 1;
+            background: #fef3e8;
+            padding: 1.5rem;
+            border-radius: 1.5rem;
+        }
+
+        /* footer */
+        .footer {
+            background: #f2eadf;
+            padding: 2rem 5%;
+            text-align: center;
+            border-radius: 2rem 2rem 0 0;
+            margin-top: 3rem;
+            color: #5a4c3a;
+        }
+
+        /* toast */
+        .toast {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #2c241a;
+            color: #f9efdd;
+            padding: 0.8rem 1.6rem;
+            border-radius: 48px;
+            font-weight: 500;
+            z-index: 2000;
+            animation: fadeUp 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 780px) {
+            .navbar {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+            .hero h1 {
+                font-size: 2.4rem;
+            }
+            .section-title {
+                font-size: 1.7rem;
+            }
+        }
+
+        .hidden-page {
+            display: none;
+        }
+        .active-page {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo" onclick="showPage('home')">📖 Ink & Page</div>
+    <div class="menu">
+        <ul>
+            <li><a href="#" onclick="showPage('home')">Home</a></li>
+            <li><a href="#" onclick="showPage('library')">Library</a></li>
+            <li><a href="#" onclick="showPage('write')">Write</a></li>
+            <li><a href="#" onclick="showPage('community')">Community</a></li>
+        </ul>
+    </div>
+    <div class="search">
+        <input class="srch" type="text" id="globalSearch" placeholder="Search stories...">
+        <button class="btn" onclick="searchGlobal()">Find</button>
+    </div>
+</div>
+
+<div class="main-container" id="appContainer">
+    <!-- HOME PAGE (landing + login) -->
+    <div id="homePage" class="active-page">
+        <div class="hero-login-row">
+            <div class="hero">
+                <h1>Read between the lines,<br> <span>write beyond the page.</span></h1>
+                <p>Join thousands of readers & writers — discover immersive stories, share your voice, and lose yourself in worlds of imagination. Ink & Page is your cozy corner for online reading & creative writing.</p>
+                <div class="cta-group">
+                    <button class="btn-primary" onclick="showPage('library')">📚 Start Reading</button>
+                    <button class="btn-outline" onclick="showPage('write')">✍️ Start Writing</button>
+                </div>
+            </div>
+            <div class="form-card">
+                <h2>Welcome back</h2>
+                <form id="login-form" onsubmit="handleLogin(event)">
+                    <input type="email" id="email" placeholder="your@email.com" required>
+                    <input type="password" id="password" placeholder="password" required>
+                    <button class="btnn" type="submit">Login →</button>
+                </form>
+                <p class="link">New storyteller? <a href="#" onclick="fakeSignup()">Create account</a></p>
+                <p class="liw">connect with</p>
+                <div class="icons">
+                    <a href="#"><ion-icon name="logo-facebook"></ion-icon></a>
+                    <a href="#"><ion-icon name="logo-instagram"></ion-icon></a>
+                    <a href="#"><ion-icon name="logo-twitter"></ion-icon></a>
+                </div>
+                <div style="font-size: 0.75rem; text-align: center; margin-top: 12px; color:#b3a085;">demo: reader@ink.com / any password</div>
+            </div>
+        </div>
+
+        <!-- Featured reads -->
+        <div class="section-title">✨ featured reads ✨</div>
+        <div class="books-grid" id="featuredGrid"></div>
+
+        <!-- writing inspiration -->
+        <div class="creative-zone">
+            <div class="writing-prompt">
+                <h3>Today's writing seed 🌱</h3>
+                <div class="quote">“Write about the scent of old books and the secret found between page 42 and 43.”</div>
+                <button class="write-btn" onclick="showPage('write')">✍️ Open writer's notebook</button>
+            </div>
+            <div class="showcase-text">
+                <strong>✨ Ink drops from our community</strong>
+                <p style="margin-top: 10px;">"Ink & Page gave me the courage to share my first chapter. The feedback changed my life." — <em>Riya M.</em></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIBRARY PAGE -->
+    <div id="libraryPage" class="hidden-page">
+        <div class="section-title">📖 boundless library 📖</div>
+        <div class="section-sub">stories to read, fall in love with, and share</div>
+        <div class="books-grid" id="libraryGrid"></div>
+        <button class="btn-primary" style="margin: 0 auto; display: table;" onclick="showPage('home')">← back home</button>
+    </div>
+
+    <!-- WRITE PAGE (minimalist editor) -->
+    <div id="writePage" class="hidden-page">
+        <div class="section-title">✍️ your writing space</div>
+        <div class="section-sub">where ideas bloom — draft, edit, publish</div>
+        <div style="background: #fffcf7; border-radius: 2rem; padding: 2rem; border: 1px solid #f0e2d2;">
+            <input type="text" id="storyTitle" placeholder="Story title..." style="width:100%; font-size:1.6rem; border: none; background: transparent; font-weight: 600; margin-bottom: 1rem; outline: none; font-family: 'Playfair Display', serif;">
+            <textarea id="storyContent" rows="12" placeholder="Start writing your masterpiece... (paragraphs, poetry, any form)&#10;&#10;The rain tapped softly against the window, and the old bookstore smelled of secrets... " style="width:100%; border: none; background: #fefaf5; font-size: 1rem; line-height: 1.6; padding: 1rem; border-radius: 1.2rem; resize: vertical; outline: none; border: 1px solid #ebdfd0;"></textarea>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button class="btn-primary" onclick="saveDraft()">💾 Save Draft</button>
+                <button class="btn-outline" onclick="publishStory()">✨ Publish to Community</button>
+            </div>
+            <p id="draftStatus" style="margin-top: 1rem; font-size: 0.8rem; color:#9f8c74;"></p>
+        </div>
+        <div style="margin-top: 2rem; text-align: center;">
+            <button class="btn" onclick="showPage('library')">📚 read others' stories</button>
+        </div>
+    </div>
+
+    <!-- COMMUNITY PAGE: dynamic user posts -->
+    <div id="communityPage" class="hidden-page">
+        <div class="section-title">📢 writer's circle</div>
+        <div class="section-sub">recent community writings & discussions</div>
+        <div id="communityFeed" style="display:flex; flex-direction: column; gap:1.5rem; margin-bottom:2rem;"></div>
+        <button class="btn-primary" style="margin: auto; display: table;" onclick="showPage('write')">✍️ share your story</button>
+    </div>
+</div>
+
+<div class="footer">
+    <p>📖 Ink & Page — read deeply, write freely.  🌿</p>
+    <p style="font-size: 0.75rem; margin-top: 0.5rem;">© 2025 | where every story finds a home</p>
+</div>
+
+<script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+<script>
+    // --------------------------- MOCK DATA ----------------------------------
+    const booksData = [
+        { id: 1, title: "Whispers of the Forgotten Library", author: "Elena C.", genre: "Fantasy", description: "A magical tale of lost books and a librarian who can hear stories.", emoji: "📜", isFeatured: true },
+        { id: 2, title: "Midnight Ink", author: "Samuel Wu", genre: "Poetry", description: "Poems about city lights and sleepless muses.", emoji: "🌙", isFeatured: true },
+        { id: 3, title: "The Writer's Apprentice", author: "Clara Hayes", genre: "Fiction", description: "A young writer discovers an antique typewriter that writes back.", emoji: "✍️", isFeatured: true },
+        { id: 4, title: "Echoes of the Sea", author: "Maya Rivers", genre: "Adventure", description: "Sailing through myth and memory.", emoji: "🌊", isFeatured: false },
+        { id: 5, title: "Quantum Pages", author: "Dr. Aris Thorne", genre: "Sci-Fi", description: "A book that changes reality with every turn.", emoji: "⚛️", isFeatured: false },
+        { id: 6, title: "Sonnets for Autumn", author: "Ivy Park", genre: "Poetry", description: "Warm verses for cozy evenings.", emoji: "🍂", isFeatured: false }
+    ];
+
+    // community posts (simulated)
+    let communityPosts = [
+        { id: 1, author: "Lena Writes", title: "The last bookstore on earth", preview: "Chapter 1: The dust settled on forgotten shelves, but I heard a whisper...", likes: 12 },
+        { id: 2, author: "PoeticSoul", title: "Ode to midnight rain", preview: "Each droplet writes a secret on my window pane.", likes: 8 },
+        { id: 3, author: "JamesFiction", title: "Parallel lines", preview: "Two strangers, one library, and the story that binds them.", likes: 24 }
+    ];
+
+    let savedDraft = null;
+
+    function renderFeaturedBooks() {
+        const featured = booksData.filter(b => b.isFeatured);
+        const container = document.getElementById('featuredGrid');
+        if(container) container.innerHTML = featured.map(book => `
+            <div class="book-card" onclick="showToast('📖 Start reading "${book.title}" — opening reader...', 'info')">
+                <div class="book-emoji">${book.emoji}</div>
+                <div class="book-title">${book.title}</div>
+                <div class="book-author">${book.author}</div>
+                <div class="book-desc">${book.description.substring(0, 70)}...</div>
+                <span class="badge">✨ trending</span>
+            </div>
+        `).join('');
+    }
+
+    function renderLibrary() {
+        const libGrid = document.getElementById('libraryGrid');
+        if(libGrid) libGrid.innerHTML = booksData.map(book => `
+            <div class="book-card" onclick="readBook('${book.title}')">
+                <div class="book-emoji">${book.emoji}</div>
+                <div class="book-title">${book.title}</div>
+                <div class="book-author">${book.author}</div>
+                <div class="book-desc">${book.description}</div>
+                <span class="badge">${book.genre}</span>
+            </div>
+        `).join('');
+    }
+
+    function renderCommunityFeed() {
+        const feedDiv = document.getElementById('communityFeed');
+        if(feedDiv) feedDiv.innerHTML = communityPosts.map(post => `
+            <div style="background: #fffcf7; border-radius: 1.5rem; padding: 1.3rem 1.8rem; border-left: 6px solid #e2bc8c;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="font-weight: 700;">📄 ${post.title}</h3>
+                    <span style="font-size:0.75rem; background:#f1e7dd; padding: 0.2rem 0.7rem; border-radius: 30px;">❤️ ${post.likes}</span>
+                </div>
+                <p style="color: #6c5d4b; margin: 0.5rem 0;">by ${post.author}</p>
+                <p style="margin-top: 0.4rem;">“${post.preview}”</p>
+                <div style="margin-top: 0.8rem; display: flex; gap: 1rem;">
+                    <button class="write-btn" style="font-size:0.7rem; padding: 0.3rem 1rem;" onclick="showToast('You liked "${post.title}"', 'success')">❤️ Like</button>
+                    <button class="write-btn" style="font-size:0.7rem; padding: 0.3rem 1rem;" onclick="readCommunityStory('${post.title}')">Read more</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function publishStory() {
+        const title = document.getElementById('storyTitle').value.trim();
+        const content = document.getElementById('storyContent').value.trim();
+        if(!title || !content) {
+            showToast("Please add a title and some story content!", "error");
+            return;
+        }
+        const newPost = {
+            id: Date.now(),
+            author: "You ✨",
+            title: title,
+            preview: content.substring(0, 100) + (content.length > 100 ? "..." : ""),
+            likes: 0
+        };
+        communityPosts.unshift(newPost);
+        renderCommunityFeed();
+        showToast("🎉 Your story has been published to the community!", "success");
+        document.getElementById('storyTitle').value = '';
+        document.getElementById('storyContent').value = '';
+        document.getElementById('draftStatus').innerHTML = '';
+        showPage('community');
+    }
+
+    function saveDraft() {
+        const title = document.getElementById('storyTitle').value;
+        const content = document.getElementById('storyContent').value;
+        savedDraft = { title, content };
+        localStorage.setItem('writingDraft', JSON.stringify(savedDraft));
+        document.getElementById('draftStatus').innerHTML = '✓ Draft saved locally.';
+        showToast("Draft saved! 📝", "success");
+    }
+
+    function loadDraftIfExists() {
+        const raw = localStorage.getItem('writingDraft');
+        if(raw) {
+            try {
+                const draft = JSON.parse(raw);
+                if(draft.title && document.getElementById('storyTitle')) document.getElementById('storyTitle').value = draft.title;
+                if(draft.content && document.getElementById('storyContent')) document.getElementById('storyContent').value = draft.content;
+                if(document.getElementById('draftStatus')) document.getElementById('draftStatus').innerHTML = '📌 Restored previous draft.';
+            } catch(e) {}
+        }
+    }
+
+    function readBook(title) {
+        showToast(`📘 Opening "${title}" — immersive reader mode (beta)`, "info");
+    }
+
+    function readCommunityStory(title) {
+        showToast(`📖 Reading "${title}" — feel the writer's soul 💫`, "info");
+    }
+
+    function searchGlobal() {
+        const query = document.getElementById('globalSearch').value.toLowerCase();
+        if(!query.trim()) { showToast("Type something to explore stories!", "error"); return; }
+        const matchedBooks = booksData.filter(b => b.title.toLowerCase().includes(query) || b.author.toLowerCase().includes(query) || b.genre.toLowerCase().includes(query));
+        if(matchedBooks.length) {
+            showToast(`Found ${matchedBooks.length} stories about “${query}”`, "success");
+            showPage('library');
+        } else {
+            showToast(`No results for “${query}” but maybe you can write it ✍️`, "info");
+        }
+    }
+
+    function handleLogin(e) {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        if(email && email.trim().length > 2) {
+            showToast(`✨ Welcome back, reader! Ready to explore? ✨`, "success");
+            localStorage.setItem('readerName', email.split('@')[0]);
+            showPage('library');
+        } else {
+            showToast("demo login: any email works! try reader@ink.com", "error");
+        }
+    }
+
+    function fakeSignup() {
+        showToast("📖 Join the writing family! (demo mode active) — you’re in!", "success");
+    }
+
+    function showToast(msg, type = "success") {
+        const existing = document.querySelector('.toast');
+        if(existing) existing.remove();
+        const toastDiv = document.createElement('div');
+        toastDiv.className = 'toast';
+        toastDiv.innerText = msg;
+        document.body.appendChild(toastDiv);
+        setTimeout(() => toastDiv.remove(), 2800);
+    }
+
+    function showPage(pageId) {
+        document.getElementById('homePage').classList.add('hidden-page');
+        document.getElementById('libraryPage').classList.add('hidden-page');
+        document.getElementById('writePage').classList.add('hidden-page');
+        document.getElementById('communityPage').classList.add('hidden-page');
+        document.getElementById('homePage').classList.remove('active-page');
+        document.getElementById('libraryPage').classList.remove('active-page');
+        document.getElementById('writePage').classList.remove('active-page');
+        document.getElementById('communityPage').classList.remove('active-page');
+        
+        if(pageId === 'home') {
+            document.getElementById('homePage').classList.remove('hidden-page');
+            document.getElementById('homePage').classList.add('active-page');
+        } else if(pageId === 'library') {
+            document.getElementById('libraryPage').classList.remove('hidden-page');
+            document.getElementById('libraryPage').classList.add('active-page');
+            renderLibrary();
+        } else if(pageId === 'write') {
+            document.getElementById('writePage').classList.remove('hidden-page');
+            document.getElementById('writePage').classList.add('active-page');
+            loadDraftIfExists();
+        } else if(pageId === 'community') {
+            document.getElementById('communityPage').classList.remove('hidden-page');
+            document.getElementById('communityPage').classList.add('active-page');
+            renderCommunityFeed();
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    renderFeaturedBooks();
+    renderLibrary();
+    renderCommunityFeed();
+    // expose global functions
+    window.showPage = showPage;
+    window.handleLogin = handleLogin;
+    window.fakeSignup = fakeSignup;
+    window.searchGlobal = searchGlobal;
+    window.saveDraft = saveDraft;
+    window.publishStory = publishStory;
+    window.readBook = readBook;
+    window.readCommunityStory = readCommunityStory;
+    window.showToast = showToast;
+    // Add this to your frontend script (replace existing handleLogin and other functions)
+
+// Store token globally
+let authToken = localStorage.getItem('access_token');
+
+// Helper for API calls
+async function apiCall(endpoint, options = {}) {
+    const headers = {
+        'Content-Type': 'application/json',
+        ...options.headers
+    };
+    
+    if (authToken) {
+        headers['Authorization'] = `Bearer ${authToken}`;
+    }
+    
+    const response = await fetch(`http://127.0.0.1:5000${endpoint}`, {
+        ...options,
+        headers
+    });
+    
+    const data = await response.json();
+    
+    if (!response.ok) {
+        throw new Error(data.error || 'API call failed');
+    }
+    
+    return data;
+}
+
+// Updated Login Function
+async function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    
+    try {
+        const data = await apiCall('/api/login', {
+            method: 'POST',
+            body: JSON.stringify({ email, password })
+        });
+        
+        authToken = data.access_token;
+        localStorage.setItem('access_token', authToken);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        
+        showToast(`✨ Welcome back, ${data.user.username}!`, 'success');
+        showPage('library');
+        
+        // Clear form
+        document.getElementById('login-form').reset();
+        
+        // Load user-specific data
+        loadUserStories();
+        
+    } catch (error) {
+        showToast(error.message, 'error');
+    }
+}
+
+// Updated Register Function
+async function handleRegister(username, email, password) {
+    try {
+        const data = await apiCall('/api/register', {
+            method: 'POST',
+            body: JSON.stringify({ username, email, password })
+        });
+        
+        authToken = data.access_token;
+        localStorage.setItem('access_token', authToken);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        
+        showToast(`🎉 Welcome to Ink & Page, ${username}!`, 'success');
+        showPage('library');
+        
+    } catch (error) {
+        showToast(error.message, 'error');
+    }
+}
+
+// Load stories from backend
+async function loadStoriesFromAPI() {
+    try {
+        const data = await apiCall('/api/stories?page=1&per_page=12');
+        return data.stories;
+    } catch (error) {
+        console.error('Failed to load stories:', error);
+        return [];
+    }
+}
+
+// Load featured stories
+async function loadFeaturedStories() {
+    try {
+        const data = await apiCall('/api/stories/featured');
+        return data.stories;
+    } catch (error) {
+        console.error('Failed to load featured stories:', error);
+        return [];
+    }
+}
+
+// Publish story to backend
+async function publishStoryToAPI(title, content, genre = 'Fiction') {
+    try {
+        const data = await apiCall('/api/stories', {
+            method: 'POST',
+            body: JSON.stringify({ title, content, genre, is_published: true })
+        });
+        
+        showToast('🎉 Your story has been published!', 'success');
+        return data.story;
+        
+    } catch (error) {
+        showToast(error.message, 'error');
+        throw error;
+    }
+}
+
+// Like a story
+async function likeStoryAPI(storyId) {
+    try {
+        await apiCall(`/api/stories/${storyId}/like`, { method: 'POST' });
+        showToast('❤️ You liked this story!', 'success');
+    } catch (error) {
+        showToast(error.message, 'error');
+    }
+}
+
+// Get writing prompt of the day
+async function loadDailyPrompt() {
+    try {
+        const data = await apiCall('/api/prompts/today');
+        return data.prompt;
+    } catch (error) {
+        return { prompt: "Write about a journey that changed everything." };
+    }
+}
+
+// Load user's stories
+async function loadUserStories() {
+    if (!authToken) return;
+    
+    try {
+        const data = await apiCall('/api/my-stories');
+        // Update UI with user's stories
+        return data.stories;
+    } catch (error) {
+        console.error('Failed to load user stories:', error);
+        return [];
+    }
+}
+
+// Logout function
+function logout() {
+    authToken = null;
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('user');
+    showToast('👋 You have been logged out', 'info');
+    showPage('home');
+}
+</script>
+</body>
+</html>
